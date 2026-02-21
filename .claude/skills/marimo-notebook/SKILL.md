@@ -29,3 +29,9 @@ Show all UI elements always. Only change the data source in script mode. Detect 
 - Include PEP 723 dependency declarations in notebook headers
 - Validate notebooks with `uvx marimo check <notebook.py>` before delivery
 - For API help: `uv --with marimo run python -c 'import marimo as mo; help(mo.ui.form)'`
+
+## References
+
+- `references/SQL.md` — SQL cell patterns and DuckDB integration
+- `references/TOP-LEVEL-IMPORTS.md` — Import rules for reactive notebooks
+- `references/UI.md` — UI component patterns and form building

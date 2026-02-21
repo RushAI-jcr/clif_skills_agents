@@ -8,4 +8,21 @@
 .DS_Store
 *.pyc
 __pycache__/
-.Rhistory
+
+# Data files (never commit patient data)
+*.parquet
+*.csv
+
+# Python environments
+venv/
+.venv/
+
+# R environments
+renv/library/
+.Rproj.user/
+
+# Secrets
+.env
+
+# Node
+node_modules/

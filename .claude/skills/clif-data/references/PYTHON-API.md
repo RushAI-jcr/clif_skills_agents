@@ -46,19 +46,110 @@ Each returns a lazy-loaded Polars DataFrame via `.df`:
 
 ## Clinical Transformations
 
+### compute_sofa_scores()
+
 ```python
-# SOFA scores per hospitalization per hour
 sofa_df = clif.compute_sofa_scores()
+```
 
-# Hourly wide format (one row per hospitalization per hour)
+**Returns a Polars DataFrame with columns:**
+
+| Column | Type | Description |
+|---|---|---|
+| hospitalization_id | VARCHAR | Encounter identifier |
+| hour | INT | Hour offset from ICU admission |
+| sofa_respiration | INT | PaO2/FiO2 component (0–4) |
+| sofa_coagulation | INT | Platelet component (0–4) |
+| sofa_liver | INT | Bilirubin component (0–4) |
+| sofa_cardiovascular | INT | MAP + vasopressor component (0–4) |
+| sofa_cns | INT | GCS component (0–4) |
+| sofa_renal | INT | Creatinine component (0–4) |
+| sofa_total | INT | Sum of all components (0–24) |
+
+### create_wide_dataset()
+
+```python
 wide_df = clif.create_wide_dataset()
+```
 
-# Merge split ICU stays (gap_hours = max gap to consider same stay)
+**Returns a Polars DataFrame with columns:**
+
+| Column | Type | Description |
+|---|---|---|
+| hospitalization_id | VARCHAR | Encounter identifier |
+| hour | INT | Hour offset from ICU admission |
+| temp_c | FLOAT | Most recent temperature |
+| heart_rate | FLOAT | Most recent heart rate |
+| sbp | FLOAT | Most recent systolic BP |
+| dbp | FLOAT | Most recent diastolic BP |
+| spo2 | FLOAT | Most recent SpO2 |
+| respiratory_rate | FLOAT | Most recent resp rate |
+| map | FLOAT | Most recent MAP |
+| (one column per lab_category) | FLOAT | Most recent lab value |
+| fio2_set | FLOAT | Most recent FiO2 |
+| peep_set | FLOAT | Most recent PEEP |
+| device_category | VARCHAR | Current respiratory device |
+| gcs_total | FLOAT | Most recent GCS |
+| rass | FLOAT | Most recent RASS |
+| (vasopressor dose columns) | FLOAT | Current infusion rates |
+
+### encounter_stitching()
+
+```python
 stitched = clif.encounter_stitching(gap_hours=24)
 ```
 
+Merges sequential hospitalization records with ICU gaps < `gap_hours` into a single continuous ICU stay. Returns a DataFrame with a `stitched_id` column.
+
 ## Outlier Handling
-clifpy includes built-in outlier detection for vitals and labs based on clinically plausible ranges. Check `clif.validate_all()` output for flagged values.
+
+clifpy includes built-in outlier detection for vitals, labs, and respiratory support based on clinically plausible ranges. Check `clif.validate_all()` output for flagged values.
+
+## Error Handling
+
+clifpy raises standard Python exceptions:
+
+| Exception | When |
+|---|---|
+| `FileNotFoundError` | `data_directory` doesn't exist or expected parquet files are missing |
+| `ValueError` | Invalid `timezone` string, or data fails schema validation |
+| `KeyError` | Accessing a table that doesn't exist in the data directory |
+| `polars.exceptions.SchemaError` | Column types don't match expected CLIF schema |
+
+**Pattern for safe initialization:**
+```python
+from clifpy import ClifOrchestrator
+
+try:
+    clif = ClifOrchestrator(
+        data_directory=config["data_directory"],
+        timezone=config["timezone"]
+    )
+    clif.validate_all()
+except FileNotFoundError as e:
+    print(f"Data not found: {e}")
+except ValueError as e:
+    print(f"Validation failed: {e}")
+```
+
+## Memory Considerations
+
+- **Lazy loading**: Table accessors (`.df`) use Polars lazy frames — data isn't loaded until you call `.collect()` or run an operation
+- **Large datasets** (>10M rows): Use `scan_parquet` with predicate pushdown. Filter on `hospitalization_id` or `lab_category` before collecting
+- **Wide dataset**: `create_wide_dataset()` can be memory-intensive for large cohorts. Filter to your cohort first, then call it
+- **SOFA scores**: `compute_sofa_scores()` joins multiple tables internally. For very large sites (>100k hospitalizations), consider computing in batches
+
+```python
+# Memory-efficient pattern for large sites
+cohort_ids = clif.hospitalization.df.filter(
+    pl.col("age_at_admission") >= 18
+).select("hospitalization_id").collect()
+
+# Filter tables to cohort before computing
+labs_cohort = clif.labs.df.filter(
+    pl.col("hospitalization_id").is_in(cohort_ids["hospitalization_id"])
+)
+```
 
 ## Configuration: `clif_config.json`
 ```json

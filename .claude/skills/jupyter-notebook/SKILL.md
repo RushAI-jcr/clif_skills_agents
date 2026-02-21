@@ -315,3 +315,100 @@ jupytext --set-formats ipynb,py notebook.ipynb
 - [ ] Set random seeds
 - [ ] Format code
 - [ ] Test notebook runs top-to-bottom
+
+---
+
+## CLIF Notebook Structure
+
+For CLIF clinical data projects, follow this recommended cell order:
+
+### 1. Config + Imports
+```python
+# Cell 1: Configuration
+import json
+import polars as pl
+from clifpy import ClifOrchestrator
+
+with open("clif_config.json") as f:
+    config = json.load(f)
+
+clif = ClifOrchestrator(
+    data_directory=config["data_directory"],
+    timezone=config["timezone"]
+)
+```
+
+### 2. Data Loading + Validation
+```python
+# Cell 2: Validate and load
+clif.validate_all()
+
+hospitalization = clif.hospitalization.df
+labs = clif.labs.df
+vitals = clif.vitals.df
+adt = clif.adt.df
+
+print(f"Hospitalizations: {hospitalization.shape[0]:,}")
+print(f"Labs: {labs.shape[0]:,}")
+print(f"Vitals: {vitals.shape[0]:,}")
+```
+
+### 3. Cohort Definition (with attrition logging)
+
+Every filter step must log the row count. This is mandatory for CONSORT-style reporting.
+
+```python
+# Cell 3: Cohort definition — log every step
+cohort = hospitalization
+print(f"All hospitalizations: {cohort.shape[0]:,}")
+
+# Age filter
+cohort = cohort.filter(pl.col("age_at_admission") >= 18)
+print(f"After age >= 18: {cohort.shape[0]:,}")
+
+# ICU patients only
+icu_ids = adt.filter(pl.col("location_category") == "icu").select("hospitalization_id").unique()
+cohort = cohort.join(icu_ids, on="hospitalization_id", how="semi")
+print(f"After ICU filter: {cohort.shape[0]:,}")
+
+# Date range
+cohort = cohort.filter(pl.col("admission_dttm").is_between("2024-01-01", "2024-12-31"))
+print(f"After date filter: {cohort.shape[0]:,}")
+```
+
+Add a markdown cell summarizing the attrition table:
+
+```markdown
+## Cohort Attrition
+
+| Step | N |
+|------|---|
+| All hospitalizations | X,XXX |
+| Age >= 18 | X,XXX |
+| ICU admission | X,XXX |
+| Date range 2024 | X,XXX |
+```
+
+### 4. Analysis
+```python
+# Cell 4+: Analysis using only _category columns (never _name)
+labs_cohort = labs.join(cohort.select("hospitalization_id"), on="hospitalization_id", how="semi")
+creatinine = labs_cohort.filter(pl.col("lab_category") == "creatinine")
+```
+
+### 5. Figures
+```python
+# Cell N: JAMA-style figures
+# Arial font, 8pt minimum, legends outside plot area
+import matplotlib.pyplot as plt
+plt.rcParams.update({"font.family": "Arial", "font.size": 9})
+```
+
+### CLIF-Specific Best Practices
+
+- **Always validate before analysis**: `clif.validate_all()` must be the first operation after loading
+- **Log attrition in markdown cells**: Every inclusion/exclusion step gets a markdown cell summarizing the count
+- **Filter on `_category`, never `_name`**: Names are site-specific EHR strings
+- **Use ADT for ICU times**: `hospitalization.admission_dttm` is hospital admission, not ICU admission
+- **Apply outlier thresholds**: Use CLIF reference ranges before any aggregation
+- **Clear outputs before committing**: Never commit cell outputs containing patient data

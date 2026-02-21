@@ -11,6 +11,12 @@
 7. **All timestamps are UTC.** Timezone conversion is mandatory — Python: clifpy's `timezone` parameter / R: `lubridate::with_tz()`.
 8. **When creating figures, follow JAMA style:** Arial font, minimum 8pt text, no overlap, legends outside plot area, sentence case axis labels.
 
+## Documentation Lookup (MANDATORY)
+
+- **Always check [clif-icu.com](https://clif-icu.com) for current CLIF code examples, schemas, and API usage before writing CLIF-related code.** This is the authoritative source — local references may be outdated.
+- **Before writing or updating code that uses a library** (clifpy, Polars, arrow, marimo, etc.), look up the latest documentation rather than relying on training data for API signatures or function parameters.
+- **When code examples conflict with live docs**, the live docs win. Update the code to match, and flag the discrepancy to the user.
+
 ## Coding Conventions
 
 - **Python**: Use Polars for large-scale clinical data processing. Pandas is acceptable.

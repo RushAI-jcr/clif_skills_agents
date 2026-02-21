@@ -63,18 +63,19 @@ For detailed information, read the appropriate reference file:
 
 | Need | Reference file |
 |------|----------------|
-| Full data dictionary with examples | `references/data_dictionary.md` |
-| Lab categories + units | `references/lab_categories.csv` |
-| Continuous med categories | `references/med_continuous_categories.csv` |
-| Intermittent med categories | `references/med_intermittent_categories.csv` |
-| Vital categories | `references/vital_categories.csv` |
-| Assessment categories | `references/assessment_categories.csv` |
-| Respiratory support outlier thresholds | `references/outlier_respiratory_support.csv` |
-| Lab outlier thresholds | `references/outlier_labs.csv` |
-| Vitals outlier thresholds | `references/outlier_vitals.csv` |
-| Microbiology organism categories | `references/organism_categories.csv` |
-| Microbiology fluid categories | `references/fluid_categories.csv` |
-| mCIDE overview (ventilation modes, CDE philosophy) | `references/mcide_overview.md` |
+| Full CLIF 2.1 schema with types and allowed values | `references/TABLES.md` |
+| Common pitfalls with wrong/right code examples | `references/PITFALLS.md` |
+| clifpy Python API (return schemas, error handling) | `references/PYTHON-API.md` |
+| R API patterns (Arrow, DuckDB, tidyverse) | `references/R-API.md` |
+| Lab categories + units + outlier thresholds | [mCIDE labs CSV](https://github.com/Common-Longitudinal-ICU-data-Format/CLIF/tree/main/mCIDE/labs) |
+| Continuous med categories | [mCIDE continuous CSV](https://github.com/Common-Longitudinal-ICU-data-Format/CLIF/tree/main/mCIDE/medication_admin_continuous) |
+| Intermittent med categories | [mCIDE intermittent CSV](https://github.com/Common-Longitudinal-ICU-data-Format/CLIF/tree/main/mCIDE/medication_admin_intermittent) |
+| Vital categories | [mCIDE vitals CSV](https://github.com/Common-Longitudinal-ICU-data-Format/CLIF/tree/main/mCIDE/vitals) |
+| Assessment categories | [mCIDE assessments CSV](https://github.com/Common-Longitudinal-ICU-data-Format/CLIF/tree/main/mCIDE/patient_assessments) |
+| Respiratory device + mode categories | [mCIDE respiratory CSV](https://github.com/Common-Longitudinal-ICU-data-Format/CLIF/tree/main/mCIDE/respiratory_support) |
+| ADT location types | [mCIDE ADT CSV](https://github.com/Common-Longitudinal-ICU-data-Format/CLIF/tree/main/mCIDE/adt) |
+| Microbiology organism + fluid categories | [mCIDE microbiology CSV](https://github.com/Common-Longitudinal-ICU-data-Format/CLIF/tree/main/mCIDE/microbiology_culture) |
+| Outlier thresholds (vitals, labs, resp, CRRT) | [mCIDE outlier-handling CSVs](https://github.com/Common-Longitudinal-ICU-data-Format/CLIF/tree/main/mCIDE/outlier-handling) |
 
 ## Common Patterns
 
@@ -109,7 +110,7 @@ Use `respiratory_support` table where `device_category = 'IMV'`. The `tracheosto
 SELECT hospitalization_id, admin_dttm, med_category, med_dose, med_dose_unit
 FROM medication_admin_continuous
 WHERE med_group = 'vasoactives'
-  AND mar_action_category NOT IN ('stopped', 'missed')
+  AND mar_action_group NOT IN ('stopped', 'missed')
 ORDER BY hospitalization_id, admin_dttm
 ```
 

@@ -1,6 +1,14 @@
 {
   "permissions": {
-    "allow": []
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "mcp__Ref__ref_search_documentation",
+      "mcp__Ref__ref_read_url"
+    ]
   },
   "enableExtendedThinking": true,
   "hooks": {
