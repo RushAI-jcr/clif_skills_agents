@@ -1,0 +1,11 @@
+# Session state (per-project, not shared)
+.claude/claude-progress.md
+.claude/claude-todo.md
+.claude/lessons.md
+.claude/plans/
+
+# OS / editor
+.DS_Store
+*.pyc
+__pycache__/
+.Rhistory

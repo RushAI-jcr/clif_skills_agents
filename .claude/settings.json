@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": []
+  },
+  "enableExtendedThinking": true,
+  "hooks": {
+    "Stop": [
+      {
+        "command": "say Hey, your turn",
+        "timeout": 10000
+      }
+    ]
+  }
+}
