@@ -4,6 +4,9 @@
 .claude/lessons.md
 .claude/plans/
 
+# Data files
+*.parquet
+
 # OS / editor
 .DS_Store
 *.pyc
