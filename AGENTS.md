@@ -73,11 +73,12 @@ When creating or editing any figure (matplotlib, seaborn, ggplot2, etc.):
 | [CLIF-TableOne](https://github.com/Common-Longitudinal-ICU-data-Format/CLIF-TableOne) | Both | Table 1, CONSORT, ECDF plots |
 | [CLIF-Lighthouse](https://github.com/Common-Longitudinal-ICU-data-Format/CLIF-Lighthouse) | Python | Interactive QC dashboard |
 | [CLIF-MIMIC](https://github.com/Common-Longitudinal-ICU-data-Format/CLIF-MIMIC) | Python | MIMIC-IV to CLIF ETL |
-| [CLIF-101](https://common-longitudinal-icu-data-format.github.io/CLIF-101/) | Docs | Onboarding documentation |
+| [CLIF Docs](https://clif-icu.com) | Docs | Website, data dictionary, ETL guide |
 
 ## Authoritative Sources
 
-- CLIF GitHub: https://github.com/clif-consortium/CLIF
-- CLIF Website: https://clif-consortium.github.io/website/
-- Data Dictionary: https://clif-consortium.github.io/website/data-dictionary/data-dictionary-2.0.0.html
-- mCIDE: https://clif-consortium.github.io/website/mCIDE.html
+- CLIF GitHub: https://github.com/Common-Longitudinal-ICU-data-Format/CLIF
+- CLIF Website: https://clif-icu.com
+- Data Dictionary: https://clif-icu.com/data-dictionary
+- mCIDE Explorer: https://clif-icu.com/mcide-explorer
+- ETL Guide: https://clif-icu.com/etl-guide

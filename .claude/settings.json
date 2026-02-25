@@ -4,6 +4,9 @@
       "Read",
       "Glob",
       "Grep",
+      "Edit",
+      "Write",
+      "Task",
       "WebFetch",
       "WebSearch",
       "mcp__Ref__ref_search_documentation",
@@ -14,8 +17,28 @@
   "hooks": {
     "Stop": [
       {
-        "command": "say Hey, your turn",
-        "timeout": 10000
+        "matcher": {},
+        "hooks": [
+          {
+            "type": "command",
+            "command": "say Hey, your turn",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": {
+          "toolName": "Write"
+        },
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Writing file: will be created or overwritten'",
+            "timeout": 5000
+          }
+        ]
       }
     ]
   }

@@ -1,6 +1,6 @@
 # CLIF 2.1 Table Reference
 
-> Source: [CLIF Data Dictionary v2.1.0](https://clif-consortium.github.io/website/data-dictionary/data-dictionary-2.1.0.html) and [CLIF 2.1 MySQL DDL](https://github.com/Common-Longitudinal-ICU-data-Format/CLIF/blob/main/ddl/2.1/CLIF2.1_MYSQL_ddl.sql)
+> Source: [CLIF Data Dictionary v2.1.0](https://clif-icu.com/data-dictionary) and [CLIF 2.1 MySQL DDL](https://github.com/Common-Longitudinal-ICU-data-Format/CLIF/blob/main/ddl/2.1/CLIF2.1_MYSQL_ddl.sql)
 
 All clinical tables link to `hospitalization` via `hospitalization_id`. The `patient` table links via `patient_id`. All datetimes are UTC (`YYYY-MM-DD HH:MM:SS+00:00`).
 

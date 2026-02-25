@@ -13,10 +13,10 @@ Scan the project root for language indicators:
 
 Based on the detected language, only reference skills matching that stack:
 
-- **Python + marimo** (`.py` marimo files, `marimo` in dependencies): clif-data, python-development, marimo-notebook, marimo-batch, anywidget, scientific-figures
+- **Python + marimo** (`.py` marimo files, `marimo` in dependencies): clif-data, python-development, marimo-notebook, marimo-pro, scientific-figures
 - **Python + Jupyter** (`.ipynb` files, no marimo indicators): clif-data, python-development, jupyter-notebook, scientific-figures
-- **Python migrating to marimo** (both `.ipynb` and marimo present, or user requests migration): clif-data, python-development, jupyter-to-marimo, marimo-notebook, marimo-batch, anywidget, scientific-figures
-- **R projects**: clif-data, r-development, r-data-tooling, quarto-notebook, rmarkdown-notebook, scientific-figures
+- **Python migrating to marimo** (both `.ipynb` and marimo present, or user requests migration): clif-data, python-development, jupyter-to-marimo, marimo-notebook, marimo-pro, scientific-figures
+- **R projects**: clif-data, r-development, r-data-tooling, quarto-notebook, scientific-figures
 - **Both languages detected**: use clif-data (shared), ask the user which language, then apply the rules above
 
 **Detection heuristics for Python notebook type:**

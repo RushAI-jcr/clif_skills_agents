@@ -6,6 +6,7 @@
 
 # Data files
 *.parquet
+review_exports/
 
 # OS / editor
 .DS_Store
